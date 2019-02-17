@@ -1,0 +1,9 @@
+[package]
+name = "rbe-rusic"
+version = "0.1.0"
+authors = ["Flaviu Toader <flaviu.toader@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+gio = "^0.3.0"
+gtk = "^0.3.0"
