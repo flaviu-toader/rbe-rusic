@@ -3,13 +3,30 @@ mod toolbar;
 extern crate gio;
 extern crate gtk;
 
-
 use gio::{ApplicationExt, ApplicationExtManual, ApplicationFlags};
-use gtk::{Application, ApplicationWindow, GtkWindowExt, ContainerExt, ToolButtonExt, WidgetExt};
+use gtk::{
+    Adjustment,
+    Application, 
+    ApplicationWindow, 
+    ContainerExt, 
+    GtkWindowExt, 
+    Image, 
+    ImageExt,
+    Scale, 
+    ScaleExt,
+    ToolButtonExt, 
+    WidgetExt
+};
+use gtk::Orientation::{
+    Horizontal,
+    Vertical
+};
 use std::env;
-use toolbar::*;
+use toolbar::MusicToolbar;
 
 struct App {
+    adjustment: Adjustment,
+    cover: Image,
     toolbar: MusicToolbar,
     window: ApplicationWindow,
 }
@@ -19,13 +36,28 @@ impl App {
         let window = ApplicationWindow::new(&application);
         window.set_title("Rusic");
 
+        let vbox = gtk::Box::new(Vertical, 0);
+        window.add(&vbox);
+
         let toolbar = MusicToolbar::new();
-        window.add(toolbar.toolbar());
+        vbox.add(toolbar.toolbar());
+
+        let cover = Image::new();
+        cover.set_from_file("cover.jpg");
+        vbox.add(&cover);
+
+        let adjustment = Adjustment::new(0.0, 0.0, 10.0, 0.0, 0.0, 0.0);
+        let scale = Scale::new(Horizontal, &adjustment);
+        scale.set_draw_value(false);
+        vbox.add(&scale);
+
         window.show_all();
 
-        let app = App {
-            toolbar,
-            window,
+        let app = App { 
+            adjustment,
+            cover,
+            toolbar, 
+            window 
         };
 
         app.connect_events();
@@ -49,7 +81,6 @@ impl App {
         });
     }
 }
-
 
 fn main() {
     let application = Application::new("com.github.rbe-rusic", ApplicationFlags::empty())
