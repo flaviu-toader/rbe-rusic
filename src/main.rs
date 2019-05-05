@@ -1,5 +1,6 @@
 mod playlist;
 mod toolbar;
+mod mp3;
 
 use gio::{ApplicationExt, ApplicationExtManual, ApplicationFlags};
 use gtk::FileChooserExt;
@@ -113,6 +114,11 @@ fn show_open_dialog(parent: &ApplicationWindow) -> Option<PathBuf> {
     }
     dialog.destroy();
     file
+}
+
+/// Utility function to convert a Duration to u64
+pub fn to_millis(duration: Duration) -> u64 {
+    duration.as_secs() * 1000 + duration.subsec_nanos() as u64 / 1_000_000
 }
 
 fn main() {
