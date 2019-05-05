@@ -151,4 +151,20 @@ impl Playlist {
     pub fn view(&self) -> &TreeView {
         &self.treeview
     }
+
+    pub fn remove_selection(&self) {
+        let selection = self.treeview.get_selection();
+        if let Some((_, iter)) = selection.get_selected() {
+            self.model.remove(&iter);
+        }
+    }
+
+    pub fn pixbuf(&self) -> Option<Pixbuf> {
+        let selection = self.treeview.get_selection();
+        if let Some((_, iter)) = selection.get_selected() {
+            let value = self.model.get_value(&iter, PIXBUF_COLUMN as i32);
+            return value.get::<Pixbuf>();
+        }
+        None
+    }
 }

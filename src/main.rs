@@ -1,12 +1,6 @@
 mod playlist;
 mod toolbar;
 
-extern crate gdk_pixbuf;
-extern crate gio;
-extern crate gtk;
-extern crate gtk_sys;
-extern crate id3;
-
 use gio::{ApplicationExt, ApplicationExtManual, ApplicationFlags};
 use gtk::FileChooserExt;
 use gtk::Orientation::{Horizontal, Vertical};
@@ -72,10 +66,13 @@ impl App {
             window.destroy();
         });
 
+        let playlist = self.playlist.clone();
+        let cover = self.cover.clone();
         let play_button = self.toolbar.play_button.clone();
         self.toolbar.play_button.connect_clicked(move |_| {
             if play_button.get_stock_id() == Some(toolbar::PLAY_STOCK.to_string()) {
                 play_button.set_stock_id(toolbar::PAUSE_STOCK);
+                toolbar::set_cover(&cover, &playlist);
             } else {
                 play_button.set_stock_id(toolbar::PAUSE_STOCK);
             }
@@ -88,6 +85,11 @@ impl App {
             if let Some(file) = file {
                 playlist.add(&file);
             }
+        });
+
+        let playlist = self.playlist.clone();
+        self.toolbar.remove_button.connect_clicked(move |_| {
+            playlist.remove_selection();
         });
     }
 }

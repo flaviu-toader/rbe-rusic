@@ -2,8 +2,13 @@ use gtk::{
     ContainerExt,
     SeparatorToolItem,
     Toolbar,
-    ToolButton
+    ToolButton,
+    Image,
+    ImageExt,
+    WidgetExt,
 };
+
+use crate::playlist::Playlist;
 
 pub const PLAY_STOCK: &str = "gtk-media-play";
 pub const PAUSE_STOCK: &str = "gtk-media-pause";
@@ -56,4 +61,9 @@ impl MusicToolbar {
     pub fn toolbar(&self) -> &Toolbar {
         &self.toolbar
     }
+}
+
+pub fn set_cover(cover: &Image, playlist: &Playlist) {
+    cover.set_from_pixbuf(playlist.pixbuf().as_ref());
+    cover.show();
 }
